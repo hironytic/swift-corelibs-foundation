@@ -371,6 +371,27 @@ _CFXMLNodePtr _CFXMLNewProperty(_CFXMLNodePtr node, const unsigned char* name, c
     return xmlNewProp(node, name, value);
 }
 
+_CFXMLNodePtr _CFXMLNewPropertyURI(_CFXMLNodePtr node, const unsigned char* uri, const unsigned char* name, const unsigned char* value) {
+    if (!uri) {
+        return _CFXMLNewProperty(node, name, value);
+    }
+
+    xmlNodePtr nodePtr = (xmlNodePtr)node;
+    xmlChar *prefix = NULL;
+    xmlChar *localName = xmlSplitQName2(name, &prefix);
+    
+    xmlNsPtr ns = xmlNewNs(nodePtr, uri, localName ? prefix : NULL);
+    _CFXMLNodePtr result = xmlNewNsProp(nodePtr, ns, localName ? localName : name, value);
+    
+    if (localName) {
+        xmlFree(localName);
+    }
+    if (prefix) {
+        xmlFree(prefix);
+    }
+    return result;
+}
+
 CFStringRef _CFXMLNodeCopyURI(_CFXMLNodePtr node) {
     xmlNodePtr nodePtr = (xmlNodePtr)node;
     switch (nodePtr->type) {
@@ -916,6 +937,10 @@ CFStringRef _Nullable _CFXMLCopyPathForNode(_CFXMLNodePtr node) {
 
 _CFXMLNodePtr _CFXMLNodeHasProp(_CFXMLNodePtr node, const char* propertyName) {
     return xmlHasProp(node, (const xmlChar*)propertyName);
+}
+
+_CFXMLNodePtr _CFXMLNoteHasPropURI(_CFXMLNodePtr node, const char* propertyName, const char* uri) {
+    return xmlHasNsProp(node, (const xmlChar*)propertyName, (const xmlChar*)uri);
 }
 
 _CFXMLDocPtr _CFXMLDocPtrFromDataWithOptions(CFDataRef data, unsigned int options) {

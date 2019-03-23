@@ -19,6 +19,7 @@ class TestXMLDocument : LoopbackServerTest {
             ("test_stringValue", test_stringValue),
             ("test_objectValue", test_objectValue),
             ("test_attributes", test_attributes),
+            ("test_attributes_uri", test_attributes_uri),
             ("test_comments", test_comments),
             ("test_processingInstruction", test_processingInstruction),
             ("test_parseXMLString", test_parseXMLString),
@@ -257,6 +258,22 @@ class TestXMLDocument : LoopbackServerTest {
         element.setAttributesWith(["hello": "world", "foobar": "buzbaz"])
         XCTAssertEqual(element.attribute(forName:"hello")?.stringValue, "world", "\(element.attribute(forName:"hello")?.stringValue as Optional)")
         XCTAssertEqual(element.attribute(forName:"foobar")?.stringValue, "buzbaz", "\(element.attributes ?? [])")
+    }
+    
+    func test_attributes_uri() {
+        let element = XMLElement(name: "root")
+        let fakeColorAttribute = XMLNode.attribute(withName: "fake:color",
+                                                   uri: "http://example.com/fakenamespace",
+                                                   stringValue: "#ff00ff") as! XMLNode
+        element.addAttribute(fakeColorAttribute)
+        XCTAssertEqual(element.attribute(forLocalName: "color", uri: "http://example.com/fakenamespace")?.stringValue, "#ff00ff")
+        XCTAssertNil(element.attribute(forLocalName: "color", uri: "http://example.com/differentnamespace"))
+
+        element.removeAttribute(forName: "color")
+        XCTAssertNotNil(element.attribute(forLocalName: "color", uri: "http://example.com/fakenamespace"))
+
+        element.removeAttribute(forName: "fake:color")
+        XCTAssertNil(element.attribute(forLocalName: "color", uri: "http://example.com/fakenamespace"))
     }
 
     func test_comments() {

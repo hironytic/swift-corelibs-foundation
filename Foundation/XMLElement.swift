@@ -181,7 +181,10 @@ open class XMLElement: XMLNode {
         @abstract Returns an attribute matching this localname URI pair.
     */
     open func attribute(forLocalName localName: String, uri URI: String?) -> XMLNode? {
-        NSUnimplemented()
+        guard let URI = URI else { return attribute(forName: localName) }
+        
+        guard let attribute = _CFXMLNoteHasPropURI(_xmlNode, localName, URI) else { return nil }
+        return XMLNode._objectNodeForNode(attribute)
     }
 
     /*!

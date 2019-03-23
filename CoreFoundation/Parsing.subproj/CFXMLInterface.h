@@ -145,6 +145,7 @@ _CFXMLNodePtr _CFXMLNewProcessingInstruction(const unsigned char* name, const un
 _CFXMLNodePtr _CFXMLNewTextNode(const unsigned char* value);
 _CFXMLNodePtr _CFXMLNewComment(const unsigned char* value);
 _CFXMLNodePtr _CFXMLNewProperty(_CFXMLNodePtr _Nullable node, const unsigned char* name, const unsigned char* value);
+_CFXMLNodePtr _CFXMLNewPropertyURI(_CFXMLNodePtr _Nullable node, const unsigned char* uri, const unsigned char* name, const unsigned char* value);
 
 CFStringRef _Nullable _CFXMLNodeCopyURI(_CFXMLNodePtr node);
 void _CFXMLNodeSetURI(_CFXMLNodePtr node, const unsigned char* _Nullable URI);
@@ -198,6 +199,7 @@ CF_RETURNS_RETAINED CFArrayRef _Nullable _CFXMLNodesForXPath(_CFXMLNodePtr node,
 CFStringRef _Nullable _CFXMLCopyPathForNode(_CFXMLNodePtr node);
 
 _CFXMLNodePtr _Nullable _CFXMLNodeHasProp(_CFXMLNodePtr node, const char* propertyName);
+_CFXMLNodePtr _Nullable _CFXMLNoteHasPropURI(_CFXMLNodePtr node, const char* propertyName, const char* uri);
 
 _CFXMLDocPtr _CFXMLDocPtrFromDataWithOptions(CFDataRef data, unsigned int options);
 

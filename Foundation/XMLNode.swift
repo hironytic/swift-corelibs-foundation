@@ -209,10 +209,9 @@ open class XMLNode: NSObject, NSCopying {
         @abstract Returns an attribute whose full QName is specified.
     */
     open class func attribute(withName name: String, uri: String, stringValue: String) -> Any {
-        let attribute = XMLNode.attribute(withName: name, stringValue: stringValue) as! XMLNode
-//        attribute.URI = URI
+        let attribute = _CFXMLNewPropertyURI(nil, uri, name, stringValue);
 
-        return attribute
+        return XMLNode(ptr: attribute)
     }
 
     /*!
