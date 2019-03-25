@@ -88,11 +88,9 @@ open class XMLElement: XMLNode {
         guard let name = _CFXMLNodeCopyName(attribute._xmlNode)?._swiftObject else {
             fatalError("Attributes must have a name!")
         }
-
-        name.cString(using: .utf8)!.withUnsafeBufferPointer() {
-            guard let ptr = $0.baseAddress, _CFXMLNodeHasProp(_xmlNode, ptr) == nil else { return }
-            addChild(attribute)
-        }
+        
+        guard _CFXMLNodeHasProp(_xmlNode, name, attribute.uri) == nil else { return }
+        addChild(attribute)
     }
 
     /*!
@@ -100,7 +98,7 @@ open class XMLElement: XMLNode {
         @abstract Removes an attribute based on its name.
     */
     open func removeAttribute(forName name: String) {
-        if let prop = _CFXMLNodeHasProp(_xmlNode, name) {
+        if let prop = _CFXMLNodeHasProp(_xmlNode, name, nil) {
             let propNode = XMLNode._objectNodeForNode(_CFXMLNodePtr(prop))
             _childNodes.remove(propNode)
             // We can't use `xmlRemoveProp` because someone else may still have a reference to this attribute
@@ -172,7 +170,7 @@ open class XMLElement: XMLNode {
         @abstract Returns an attribute matching this name.
     */
     open func attribute(forName name: String) -> XMLNode? {
-        guard let attribute = _CFXMLNodeHasProp(_xmlNode, name) else { return nil }
+        guard let attribute = _CFXMLNodeHasProp(_xmlNode, name, nil) else { return nil }
         return XMLNode._objectNodeForNode(attribute)
     }
 
@@ -181,7 +179,8 @@ open class XMLElement: XMLNode {
         @abstract Returns an attribute matching this localname URI pair.
     */
     open func attribute(forLocalName localName: String, uri URI: String?) -> XMLNode? {
-        NSUnimplemented()
+        guard let attribute = _CFXMLNodeHasProp(_xmlNode, localName, URI) else { return nil }
+        return XMLNode._objectNodeForNode(attribute)
     }
 
     /*!
