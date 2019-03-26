@@ -931,13 +931,27 @@ CFStringRef _Nullable _CFXMLCopyPathForNode(_CFXMLNodePtr node) {
     return result;
 }
 
+static inline xmlNsPtr _searchNamespace(xmlNodePtr nodePtr, xmlChar* prefix) {
+    while (nodePtr != NULL) {
+        xmlNsPtr ns = nodePtr->ns;
+        while (ns != NULL) {
+            if (xmlStrcmp((const xmlChar*)prefix, ns->prefix) == 0) {
+                return ns;
+            }
+            ns = ns->next;
+        }        
+        nodePtr = nodePtr->parent;
+    }
+    return NULL;
+}
+
 _CFXMLNodePtr _CFXMLNodeHasProp(_CFXMLNodePtr node, const unsigned char* propertyName, const unsigned char* uri) {
     xmlNodePtr nodePtr = (xmlNodePtr)node;
-    xmlChar *prefix = NULL;
-    xmlChar *localName = xmlSplitQName2(propertyName, &prefix);
+    xmlChar* prefix = NULL;
+    xmlChar* localName = xmlSplitQName2(propertyName, &prefix);
     
     if (!uri) {
-        xmlNsPtr ns = xmlSearchNs(((xmlNodePtr)node)->doc, node, prefix);
+        xmlNsPtr ns = _searchNamespace(nodePtr, prefix);
         uri = ns ? ns->href : NULL;
     }
     _CFXMLNodePtr result;
