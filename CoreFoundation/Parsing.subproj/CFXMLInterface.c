@@ -931,18 +931,34 @@ CFStringRef _Nullable _CFXMLCopyPathForNode(_CFXMLNodePtr node) {
     return result;
 }
 
-static inline xmlNsPtr _searchNamespace(xmlNodePtr nodePtr, xmlChar* prefix) {
+static inline xmlNsPtr _searchNamespace(xmlNodePtr nodePtr, const xmlChar* prefix) {
     while (nodePtr != NULL) {
         xmlNsPtr ns = nodePtr->ns;
         while (ns != NULL) {
-            if (xmlStrcmp((const xmlChar*)prefix, ns->prefix) == 0) {
+            if (xmlStrcmp(prefix, ns->prefix) == 0) {
                 return ns;
             }
             ns = ns->next;
-        }        
+        }
         nodePtr = nodePtr->parent;
     }
     return NULL;
+}
+
+void _CFXMLCompletePropURI(_CFXMLNodePtr propertyNode, _CFXMLNodePtr node) {
+    xmlNodePtr propNodePtr = (xmlNodePtr)propertyNode;
+    xmlNodePtr nodePtr = (xmlNodePtr)node;
+    if (propNodePtr->type != XML_ATTRIBUTE_NODE || nodePtr->type != XML_ELEMENT_NODE) {
+        return;
+    }
+    if (propNodePtr->ns != NULL
+            && propNodePtr->ns->href == NULL
+            && propNodePtr->ns->prefix != NULL) {
+        xmlNsPtr ns = _searchNamespace(nodePtr, propNodePtr->ns->prefix);
+        if (ns != NULL && ns->href != NULL) {
+            propNodePtr->ns->href = xmlStrdup(ns->href);
+        }
+    }
 }
 
 _CFXMLNodePtr _CFXMLNodeHasProp(_CFXMLNodePtr node, const unsigned char* propertyName, const unsigned char* uri) {

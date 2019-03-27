@@ -89,6 +89,7 @@ open class XMLElement: XMLNode {
             fatalError("Attributes must have a name!")
         }
         
+        _CFXMLCompletePropURI(attribute._xmlNode, _xmlNode);        
         guard _CFXMLNodeHasProp(_xmlNode, name, attribute.uri) == nil else { return }
         addChild(attribute)
     }
