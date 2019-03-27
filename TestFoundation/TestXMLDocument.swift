@@ -283,17 +283,13 @@ class TestXMLDocument : LoopbackServerTest {
         
         // Add attributes with URI
         element.addAttribute(XMLNode.attribute(withName: "ns1:age", uri: uriNs1, stringValue: "44") as! XMLNode)
-        element.addAttribute(XMLNode.attribute(withName: "ns1:address", uri: uriNs2, stringValue: "Foobar City") as! XMLNode) // different namespace prefix
-        element.addAttribute(XMLNode.attribute(withName: "phone", uri: uriNs2, stringValue: "xxx-xxx") as! XMLNode) // no prefix
+        element.addAttribute(XMLNode.attribute(withName: "ns2:address", uri: uriNs2, stringValue: "Foobar City") as! XMLNode)
         
         // Retrieve attributes without URI
         XCTAssertEqual(element.attribute(forName: "name")?.stringValue, "John", "name=John")
         XCTAssertEqual(element.attribute(forName: "ns1:name")?.stringValue, "Tom", "ns1:name=Tom")
         XCTAssertEqual(element.attribute(forName: "ns1:age")?.stringValue, "44", "ns1:age=44")
-        XCTAssertEqual(element.attribute(forName: "ns1:address")?.stringValue, "Foobar City", "ns1:addresss=Foobar City")
         XCTAssertEqual(element.attribute(forName: "ns2:address")?.stringValue, "Foobar City", "ns2:addresss=Foobar City")
-        XCTAssertEqual(element.attribute(forName: "phone")?.stringValue, "xxx-xxx", "phone=xxx-xxx")
-        XCTAssertEqual(element.attribute(forName: "ns2:phone")?.stringValue, "xxx-xxx", "ns2:phone=xxx-xxx")
         
         // Retrieve attributes with URI
         XCTAssertEqual(element.attribute(forLocalName: "name", uri: nil)?.stringValue, "John", "name=John")
@@ -301,8 +297,6 @@ class TestXMLDocument : LoopbackServerTest {
         XCTAssertEqual(element.attribute(forLocalName: "age", uri: uriNs1)?.stringValue, "44", "age=44")
         XCTAssertNil(element.attribute(forLocalName: "address", uri: uriNs1), "address=nil")
         XCTAssertEqual(element.attribute(forLocalName: "address", uri: uriNs2)?.stringValue, "Foobar City", "addresss=Foobar City")
-        XCTAssertEqual(element.attribute(forLocalName: "phone", uri: uriNs2)?.stringValue, "xxx-xxx", "phone=xxx-xxx")
-        XCTAssertNil(element.attribute(forLocalName: "ns1:age", uri: uriNs1), "ns1:age=nil")
         
         // Overwrite attributes
         element.addAttribute(XMLNode.attribute(withName: "ns1:age", stringValue: "33") as! XMLNode)
