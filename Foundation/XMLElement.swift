@@ -90,6 +90,7 @@ open class XMLElement: XMLNode {
         }
 
         removeAttribute(forName: name)
+        _CFXMLCompletePropURI(attribute._xmlNode, _xmlNode);        
         addChild(attribute)
     }
 
