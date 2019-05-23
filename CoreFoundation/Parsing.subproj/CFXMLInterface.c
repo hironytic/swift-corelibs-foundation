@@ -367,7 +367,7 @@ _CFXMLNodePtr _CFXMLNewComment(const unsigned char* value) {
     return xmlNewComment(value);
 }
 
-_CFXMLNodePtr _CFXMLNewProperty(_CFXMLNodePtr node, const unsigned char* uri, const unsigned char* name, const unsigned char* value) {
+_CFXMLNodePtr _CFXMLNewProperty(_CFXMLNodePtr node, const unsigned char* name, const unsigned char* uri, const unsigned char* value) {
     xmlNodePtr nodePtr = (xmlNodePtr)node;
     xmlChar *prefix = NULL;
     xmlChar *localName = xmlSplitQName2(name, &prefix);

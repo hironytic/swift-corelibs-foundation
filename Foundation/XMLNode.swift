@@ -122,7 +122,7 @@ open class XMLNode: NSObject, NSCopying {
             _xmlNode = _CFXMLNewNode(nil, "")
 
         case .attribute:
-            _xmlNode = _CFXMLNodePtr(_CFXMLNewProperty(nil, nil, "", ""))
+            _xmlNode = _CFXMLNodePtr(_CFXMLNewProperty(nil, "", nil, ""))
 
         case .DTDKind:
             _xmlNode = _CFXMLNewDTD(nil, "", "", "")
@@ -199,7 +199,7 @@ open class XMLNode: NSObject, NSCopying {
         @abstract Returns an attribute <tt>name="stringValue"</tt>.
     */
     open class func attribute(withName name: String, stringValue: String) -> Any {
-        let attribute = _CFXMLNewProperty(nil, nil, name, stringValue)
+        let attribute = _CFXMLNewProperty(nil, name, nil, stringValue)
 
         return XMLNode(ptr: attribute)
     }
@@ -209,7 +209,7 @@ open class XMLNode: NSObject, NSCopying {
         @abstract Returns an attribute whose full QName is specified.
     */
     open class func attribute(withName name: String, uri: String, stringValue: String) -> Any {
-        let attribute = _CFXMLNewProperty(nil, uri, name, stringValue)
+        let attribute = _CFXMLNewProperty(nil, name, uri, stringValue)
 
         return XMLNode(ptr: attribute)
     }

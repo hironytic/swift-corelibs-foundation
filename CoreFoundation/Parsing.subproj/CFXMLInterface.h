@@ -144,7 +144,7 @@ _CFXMLDocPtr _CFXMLNewDoc(const unsigned char* version);
 _CFXMLNodePtr _CFXMLNewProcessingInstruction(const unsigned char* name, const unsigned char* value);
 _CFXMLNodePtr _CFXMLNewTextNode(const unsigned char* value);
 _CFXMLNodePtr _CFXMLNewComment(const unsigned char* value);
-_CFXMLNodePtr _CFXMLNewProperty(_CFXMLNodePtr _Nullable node, const unsigned char* _Nullable uri, const unsigned char* name, const unsigned char* value);
+_CFXMLNodePtr _CFXMLNewProperty(_CFXMLNodePtr _Nullable node, const unsigned char* name, const unsigned char* _Nullable uri, const unsigned char* value);
 
 CFStringRef _Nullable _CFXMLNodeCopyURI(_CFXMLNodePtr node);
 void _CFXMLNodeSetURI(_CFXMLNodePtr node, const unsigned char* _Nullable URI);
