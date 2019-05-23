@@ -372,8 +372,13 @@ _CFXMLNodePtr _CFXMLNewProperty(_CFXMLNodePtr node, const unsigned char* uri, co
     xmlChar *prefix = NULL;
     xmlChar *localName = xmlSplitQName2(name, &prefix);
 
-    xmlNsPtr ns = xmlNewNs(nodePtr, uri, localName ? prefix : NULL);
-    _CFXMLNodePtr result = xmlNewNsProp(nodePtr, ns, localName ? localName : name, value);
+    _CFXMLNodePtr result;
+    if (uri == NULL && localName == NULL) {
+        result = xmlNewProp(node, name, value);
+    } else {
+        xmlNsPtr ns = xmlNewNs(nodePtr, uri, localName ? prefix : NULL);
+        result = xmlNewNsProp(nodePtr, ns, localName ? localName : name, value);
+    }
     
     if (localName) {
         xmlFree(localName);
@@ -971,11 +976,7 @@ _CFXMLNodePtr _CFXMLNodeHasProp(_CFXMLNodePtr node, const unsigned char* propert
         uri = ns ? ns->href : NULL;
     }
     _CFXMLNodePtr result;
-    if (uri) {
-        result = xmlHasNsProp(node, localName ? localName : propertyName, uri);
-    } else {
-        result = xmlHasProp(node, propertyName);
-    }
+    result = xmlHasNsProp(node, localName ? localName : propertyName, uri);
     
     if (localName) {
         xmlFree(localName);
